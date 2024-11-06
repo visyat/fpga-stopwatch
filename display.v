@@ -14,49 +14,50 @@ module display(
     anodeActivate,
     LED_out
 ); 
-    input reg [5:0] minutes;
-    input reg [5:0] seconds;
+    input [5:0] minutes;
+    input [5:0] seconds;
 
     input reset;
+    input incClk;
     input fastClk;
     input blinkClk;
 
-    input reg adj;
-    input reg sel;
-    input reg pause;
+    input adj;
+    input sel;
+    input pause;
 
     output reg [3:0] anodeActivate;
-    output reg [6:0] LEDOut;
+    output reg [6:0] LED_out;
 
     reg [3:0] LED_BCD;
     wire [1:0] digitSelect;
     reg [1:0] digitCounter;
 
-    always (@(posedge fastClk or posedge reset)) begin
+    always @(posedge fastClk or posedge reset) begin
         if (reset)
             digitCounter <= 2'b00;
         else
             digitCounter <= digitCounter + 1;
     end
 
-    always(@) begin
+    always @(*) begin
     // when in adjust mode and pause mode, the minutes and seconds will change based on counter module 
     // only thing need to account for is blinking in pause mode
         case (digitSelect)
             2'b00: begin
-                anodeActivate = 4'0111;
+                anodeActivate = 4'b0111;
                 LED_BCD = minutes/10;
             end
             2'b01: begin
-                anodeActivate = 4'1011;
+                anodeActivate = 4'b1011;
                 LED_BCD = minutes%10;
             end
             2'b10: begin
-                anodeActivate = 4'1101;
+                anodeActivate = 4'b1101;
                 LED_BCD = seconds/10;
             end
             2'b11: begin
-                anodeActivate = 4'1110;
+                anodeActivate = 4'b1110;
                 LED_BCD = seconds%10;
             end
         endcase
@@ -78,9 +79,9 @@ module display(
         endcase
     end
 
-    always(@posedge blinkClk) begin
+    always @(posedge blinkClk) begin
         if (pause) begin
-            anodeActivate = 4'1111;
+            anodeActivate = 4'b1111;
         end
     end
 

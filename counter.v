@@ -45,6 +45,7 @@ module counter(
             if (sel == 0) begin // minutes adjust
                 if (minutes == 59) begin
                     minutes <= 0;
+                end
                 else begin
                     minutes <= minutes + 1;
                 end 
@@ -52,6 +53,7 @@ module counter(
             else if (sel == 1) begin  // seconds adjust
                 if (seconds == 59) begin
                     seconds <= 0;
+                end
                 else begin
                     seconds <= seconds + 1;
                 end
