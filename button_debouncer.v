@@ -8,7 +8,8 @@ module buttonDebouncer(
     output reg rising_debounced_signal;
 
     reg debounced_signal;
-    reg [2:0] step_d <= 0;
+    reg [2:0] step_d;
+    // step_d <= 0;
 
     debouncer db_inst (
         .btn(btn),
@@ -19,7 +20,7 @@ module buttonDebouncer(
         step_d[2:0]  <= {debounced_signal, step_d[2:1]};
     end
 
-    always @ (posedge clk) begin
+    always @ (posedge sampling_clk) begin
         rising_debounced_signal <= ~step_d[0] & step_d[1];
     end
 endmodule

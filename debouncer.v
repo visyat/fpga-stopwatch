@@ -7,7 +7,7 @@ module debouncer(
     input wire sampling_clk;
     output reg debounced_signal;
 
-    debounced_signal = 0;
+    // debounced_signal = 0;
     always @ (posedge sampling_clk) begin
         debounced_signal <= btn;
     end
