@@ -7,7 +7,7 @@ module buttonDebouncer(
     input wire sampling_clk;
     output reg rising_debounced_signal;
 
-    reg debounced_signal;
+    wire debounced_signal;
     reg [2:0] step_d;
     // step_d <= 0;
 

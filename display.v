@@ -2,12 +2,9 @@ module display(
     //Inputs
     minutes,
     seconds,
-    incClk,
     fastClk,
     blinkClk,
-    adj,
-    sel,
-    pause,
+    paused,
     reset,
 
     //Outputs
@@ -18,13 +15,9 @@ module display(
     input [5:0] seconds;
 
     input reset;
-    input incClk;
     input fastClk;
     input blinkClk;
-
-    input adj;
-    input sel;
-    input pause;
+    input paused;
 
     output reg [3:0] anodeActivate;
     output reg [6:0] LED_out;
@@ -39,6 +32,7 @@ module display(
         else
             digitCounter <= digitCounter + 1;
     end
+    assign digitSelect = digitCounter;
 
     always @(*) begin
     // when in adjust mode and pause mode, the minutes and seconds will change based on counter module 
@@ -80,7 +74,7 @@ module display(
     end
 
     always @(posedge blinkClk) begin
-        if (pause) begin
+        if (paused) begin
             anodeActivate = 4'b1111;
         end
     end

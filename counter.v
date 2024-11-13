@@ -3,21 +3,21 @@ module counter(
     input wire incClk, // 2. Stopwatch. Increment Counter on MIN:SEC
     // input wire fastClk, // 3. Display
     // input wire blinkClk, // 4. Blinking LED on Adjust Mode
-    input reg rst,
-    input reg adj,
-    input reg sel,
-    input reg pause,
+    input wire rst,
+    input wire adj,
+    input wire sel,
+    input wire paused,
     output reg [5:0] minutes,
     output reg [5:0] seconds
 );
 
-    reg paused = 0;
+    reg [5:0] adj_minutes;
+    reg [5:0] adj_seconds;
 
     always @(posedge incClk or posedge rst) begin
         if (rst) begin
             minutes <= 0;
             seconds <= 0;
-            paused <= 0;
         end
         else if (adj == 0 && paused == 0) begin
             if (seconds == 59) begin
@@ -33,35 +33,36 @@ module counter(
                 seconds <= seconds + 1;
             end
         end
+        else begin
+            minutes <= adj_minutes;
+            seconds <= adj_minutes;
+        end
     end
 
-    always @(posedge adjClk or posedge rst) begin
-        if (rst) begin
-            minutes <= 0;
-            seconds <= 0;
-            paused <= 0;
-        end
-        else if (adj == 1) begin
+    always @(posedge adjClk) begin
+        
+        if (adj == 1) begin
             if (sel == 0) begin // minutes adjust
-                if (minutes == 59) begin
-                    minutes <= 0;
+                if (adj_minutes == 59) begin
+                    adj_minutes <= 0;
                 end
                 else begin
-                    minutes <= minutes + 1;
+                    adj_minutes <= adj_minutes + 1;
                 end 
             end
             else if (sel == 1) begin  // seconds adjust
-                if (seconds == 59) begin
-                    seconds <= 0;
+                if (adj_seconds == 59) begin
+                    adj_seconds <= 0;
                 end
                 else begin
-                    seconds <= seconds + 1;
+                    adj_seconds <= adj_seconds + 1;
                 end
             end
         end
+        else begin
+            adj_minutes <= minutes;
+            adj_seconds <= seconds;
+        end
     end
 
-    always @(posedge pause) begin
-        paused <= ~paused;
-    end
 endmodule
