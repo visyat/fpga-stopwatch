@@ -10,10 +10,10 @@ module clock(
 );
     input wire masterClk;
     input wire rst;
-    output adjClk; // 1. Adjusting the clock based on ADJ and SEL
-    output incClk; // 2. Stopwatch. Increment Counter on MIN:SEC
-    output fastClk; // 3. Display
-    output blinkClk; // 4. Blinking LED on Adjust Mode
+    output reg adjClk; // 1. Adjusting the clock based on ADJ and SEL
+    output reg incClk; // 2. Stopwatch. Increment Counter on MIN:SEC
+    output reg fastClk; // 3. Display
+    output reg blinkClk; // 4. Blinking LED on Adjust Mode
 
     //Master Clock ==> 100 MHz 
 

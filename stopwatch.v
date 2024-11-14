@@ -15,66 +15,87 @@ module stopwatch (
     input btnS; //Pause
     input btnR; //Reset 
     
-    output reg [3:0] an;
-    output reg [6:0] seg;
+    output wire [3:0] an;
+    output wire [6:0] seg;
 
-    reg adjClk;
-    reg incClk;
-    reg fastClk;
-    reg blinkClk;
+    wire adjClk;
+    wire incClk;
+    wire fastClk;
+    wire blinkClk;
+    reg paused;
+    wire pause;
+    wire reset;
+    wire ADJ;
+    wire SEL;
 
     // reg dPause;
     // reg dReset;
 
-    reg [5:0] min;
-    reg [5:0] sec;
+    wire [5:0] min;
+    wire [5:0] sec;
 
-    clockMod clock (
+    clock inst_clk (
         .masterClk(clk),
-        .rst(btnR),
+        .rst(reset),
         .adjClk(adjClk),
         .incClk(incClk), 
         .fastClk(fastClk), 
         .blinkClk(blinkClk)
     );
 
-    // debouncePause buttonDebouncer (
-    //     .btn(btnS), 
-    //     .sampling_clk(fastClk),
-    //     .rising_debounced_signal()
-    // );
+     buttonDebouncer pause_inst (
+         .btn(btnS), 
+         .sampling_clk(fastClk),
+         .rising_debounced_signal(pause)
+     );
+     
+     buttonDebouncer reset_inst (
+              .btn(btnR), 
+              .sampling_clk(fastClk),
+              .rising_debounced_signal(reset)
+          );
+     
+     debouncer sel_inst (
+          .btn(sw[0]),
+          .sampling_clk(fastClk),
+          .debounced_signal(SEL)
+      );
+      
+      debouncer adj_inst (
+           .btn(sw[1]),
+           .sampling_clk(fastClk),
+           .debounced_signal(ADJ)
+       );
 
-    // debounceReset buttonDebouncer (
-    //     .btn(), 
-    //     .sampling_clk(),
-    //     .rising_debounced_signal()
-    // );
-
-    countMod count (
+    counter inst_cntr (
         .adjClk(adjClk),
         .incClk(incClk),
-        .rst(btnR),
-        .sel(sw[0]),
-        .adj(sw[1]),
-        .pause(btnS),
+        .rst(reset),
+        .sel(SEL),
+        .adj(ADJ),
+        .paused(paused),
         .minutes(min),
         .seconds(sec)
     );
 
-    displayMod display (
+    display inst_display (
         .minutes(min),
         .seconds(sec),
-        .incClk(incClk),
         .fastClk(fastClk),
         .blinkClk(blinkClk),
-        .adj(sw[1]),
-        .sel(sw[0]),
-        .pause(btnS),
-        .reset(btnR),
+        .paused(paused),
+        .reset(reset),
         .anodeActivate(an),
         .LED_out(seg)
     );
-);
+    
+    always @(fastClk) begin
+        if (pause) begin
+            paused <= ~paused;
+        end
+        else if (reset) begin
+             paused <= 0;
+        end
+    end
 
 endmodule
-
