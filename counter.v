@@ -37,27 +37,35 @@ module counter(
             minutes <= adj_minutes;
             seconds <= adj_minutes;
         end
+        else begin
+            minutes <= adj_minutes;
+            seconds <= adj_minutes;
+        end
     end
 
     always @(posedge adjClk) begin
         
         if (adj == 1) begin
             if (sel == 0) begin // minutes adjust
-                if (adj_minutes == 59) begin
-                    adj_minutes <= 0;
+                if (adj_adj_minutes == 59) begin
+                    adj_adj_minutes <= 0;
                 end
                 else begin
-                    adj_minutes <= adj_minutes + 1;
+                    adj_adj_minutes <= adj_adj_minutes + 1;
                 end 
             end
             else if (sel == 1) begin  // seconds adjust
-                if (adj_seconds == 59) begin
-                    adj_seconds <= 0;
+                if (adj_adj_seconds == 59) begin
+                    adj_adj_seconds <= 0;
                 end
                 else begin
-                    adj_seconds <= adj_seconds + 1;
+                    adj_adj_seconds <= adj_adj_seconds + 1;
                 end
             end
+        end
+        else begin
+            adj_minutes <= minutes;
+            adj_seconds <= seconds;
         end
         else begin
             adj_minutes <= minutes;

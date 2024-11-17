@@ -15,24 +15,19 @@ module stopwatch (
     input btnS; //Pause
     input btnR; //Reset 
     
-    output wire [3:0] an;
-    output wire [6:0] seg;
+    output reg [3:0] an;
+    output reg [6:0] seg;
 
-    wire adjClk;
-    wire incClk;
-    wire fastClk;
-    wire blinkClk;
-    reg paused;
-    wire pause;
-    wire reset;
-    wire ADJ;
-    wire SEL;
+    reg adjClk;
+    reg incClk;
+    reg fastClk;
+    reg blinkClk;
 
     // reg dPause;
     // reg dReset;
 
-    wire [5:0] min;
-    wire [5:0] sec;
+    reg [5:0] min;
+    reg [5:0] sec;
 
     clock inst_clk (
         .masterClk(clk),
