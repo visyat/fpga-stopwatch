@@ -4,7 +4,7 @@ module display(
     seconds,
     fastClk,
     blinkClk,
-    paused,
+    pause,
     reset,
 
     //Outputs
@@ -17,7 +17,7 @@ module display(
     input reset;
     input fastClk;
     input blinkClk;
-    input paused;
+    input pause;
 
     output reg [3:0] anodeActivate;
     output reg [6:0] LED_out;
@@ -74,7 +74,7 @@ module display(
     end
 
     always @(posedge blinkClk) begin
-        if (paused) begin
+        if (pause) begin
             anodeActivate = 4'b1111;
         end
     end
