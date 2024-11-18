@@ -1,31 +1,29 @@
 module test;
     reg clk;
     reg rst;
+    reg pause; 
+    reg [1:0] sw;
 
-    reg adjClk;
-    reg incClk;
-    reg fastClk;
-    reg blinkClk;
+    reg [3:0] an;
+    reg [6:0] seg;
+
+    integer i;
   
-    clock Clock (
-        .masterClk(clk), 
-        .rst(rst), 
-        .adjClk(adjClk), 
-        .incClk(incClk), 
-        .fastClk(fastClk), 
-        .blinkClk(blinkClk)
+    stopwatch stopwatch_mod(
+        .sw(sw),
+        .clk(clk),
+        .btnS(pause),
+        .btnR(rst),
+        .an(an),
+        .seg(seg)
     );
 
     initial begin
-        $display("Resetting stopwatch");
         clk = 0;
         rst = 1;
-        #10 rst = 0;
+        pause = 0;
+        sw = 2'b00;
     end
-
     always #5 clk = ~clk;
-    always @(posedge fastClk) begin
-        $display("Time=%0t ns: fastClk changed to %b", $time, fastClk);
-    end
   
 endmodule
